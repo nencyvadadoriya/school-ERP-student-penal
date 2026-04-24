@@ -1,0 +1,396 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles are handled by @tailwind base */
+
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+  color: #1F2937;
+}
+
+/* Prevent horizontal scrolling across the site */
+html,
+body,
+#root {
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #002B5B40;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #002B5B60;
+}
+
+/* Theme Colors - Primary School Blue */
+:root {
+  --primary: #002B5B;
+  --primary-light: #1e5a96;
+  --primary-dark: #001829;
+  
+  --secondary: #2D54A8;
+  --secondary-light: #4a73c4;
+  --secondary-dark: #1a3060;
+  
+  --accent: #FFC107;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  
+  --background: #F0F2F5;
+  --white: #FFFFFF;
+  
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  
+  --border-color: #E5E7EB;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom components */
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply bg-[#002B5B] hover:bg-[#001829] text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-4 rounded-lg border border-gray-300 transition-all duration-200 active:scale-95;
+  }
+
+  .btn-outline {
+    @apply border-2 border-[#002B5B] text-[#002B5B] hover:bg-[#002B5B]/5 font-medium py-2.5 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-danger {
+    @apply bg-[#EF4444] hover:bg-[#DC2626] text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  .btn-success {
+    @apply bg-[#10B981] hover:bg-[#059669] text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  .btn-warning {
+    @apply bg-[#F59E0B] hover:bg-[#D97706] text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 active:scale-95;
+  }
+
+  /* Input Fields */
+  .input-field {
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#002B5B] focus:border-transparent transition-all duration-200;
+  }
+
+  .input-field:disabled {
+    @apply bg-gray-50 cursor-not-allowed;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 transition-all duration-200;
+  }
+
+  .card:hover {
+    @apply shadow-md;
+  }
+
+  .stat-card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200;
+  }
+
+  /* Glass Morphism Cards */
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl rounded-xl p-6;
+  }
+
+  .glass-card-dark {
+    @apply bg-slate-900/80 backdrop-blur-md border border-slate-700/50 shadow-2xl rounded-xl p-6;
+  }
+
+  /* Gradients */
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #002B5B 0%, #2D54A8 100%);
+  }
+
+  .bg-gradient-school {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  }
+
+  .bg-gradient-success {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  }
+
+  /* Tables */
+  .table-header {
+    @apply bg-gray-50 border-b border-gray-200;
+  }
+
+  .table-row {
+    @apply border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200;
+  }
+
+  .table-cell {
+    @apply px-4 py-3 text-sm;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply badge bg-blue-100 text-blue-800;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-100 text-yellow-800;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-100 text-red-800;
+  }
+
+  /* Animations */
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulseSoft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  /* Loading Skeleton */
+  .skeleton {
+    @apply bg-gray-200 animate-pulse rounded;
+  }
+
+  .skeleton-text {
+    @apply skeleton h-4 w-full mb-2;
+  }
+
+  .skeleton-card {
+    @apply skeleton h-48 w-full rounded-lg;
+  }
+
+  /* Modals */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4;
+  }
+
+  .modal-content {
+    @apply bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate-fade-in;
+  }
+
+  /* Responsive Utilities */
+  @media (max-width: 768px) {
+    /* Mobile padding fixes */
+    main,
+    .main-content,
+    body,
+    #root {
+      background-color: #F0F2F5;
+      padding: 0;
+    }
+
+
+
+    /* Reduce padding on mobile cards */
+    .card,
+    .stat-card,
+    .glass-card {
+      @apply p-4;
+    }
+
+    /* Mobile button sizing */
+    .btn-primary,
+    .btn-secondary,
+    .btn-outline {
+      @apply w-full py-3;
+    }
+
+    /* Full width inputs on mobile */
+    .input-field {
+      @apply w-full;
+    }
+
+    /* Hide desktop-only elements */
+    .hidden-mobile {
+      @apply hidden;
+    }
+
+    /* Adjust grid for mobile - avoid recursive @apply */
+    .grid-mobile-1 {
+      @apply grid-cols-1;
+    }
+
+    .grid-mobile-2 {
+      @apply grid-cols-2;
+    }
+
+
+    /* Better mobile spacing */
+    .space-y-6 {
+      @apply space-y-4;
+    }
+
+    .gap-6 {
+      @apply gap-4;
+    }
+  }
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #002B5B;
+  outline-offset: 2px;
+}
+
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Better form placeholder text */
+::placeholder {
+  color: #9CA3AF;
+  opacity: 1;
+}
+
+/* Selection color */
+::selection {
+  background-color: #002B5B;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #002B5B;
+  color: white;
+}
+
+/* Link styles */
+a {
+  color: #2D54A8;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #1a3060;
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid #002B5B;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Transitions for smooth interactions */
+/* Transitions are handled via Tailwind classes or specific selectors for better performance */
+
+
+/* Disable transitions for animations */
+.animate-fade-in,
+.animate-slide-in,
+.animate-float,
+.animate-pulse-subtle {
+  transition: none;
+}
