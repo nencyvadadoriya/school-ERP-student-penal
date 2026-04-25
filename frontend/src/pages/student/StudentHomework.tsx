@@ -2,9 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { homeworkAPI } from '../../services/api';
 import { Skeleton, CardSkeleton } from '../../components/Skeleton';
 import { useAuth } from '../../context/AuthContext';
+import PageHeader from '../../components/PageHeader';
+
+import { 
+  BookOpen, ChevronRight, Calendar, ArrowLeft
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const StudentHomework: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -57,24 +64,24 @@ const StudentHomework: React.FC = () => {
 
     return (
       <div 
-        className="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-all duration-200 relative overflow-hidden group"
-        style={{ borderLeft: `4px solid ${themeColor}` }}
+        className="bg-white rounded-lg border border-gray-100 p-3 hover:shadow-sm transition-all duration-200 relative overflow-hidden group shadow-sm"
+        style={{ borderLeft: `3px solid ${themeColor}` }}
       >
-        <div className="flex justify-between items-start gap-3 mb-4">
+        <div className="flex justify-between items-start gap-2 mb-3">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-0.5">
               <span 
-                className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
+                className="text-[9px] font-bold px-1.5 py-0 rounded-md uppercase tracking-wider"
                 style={{ backgroundColor: `${themeColor}15`, color: themeColor }}
               >
                 {hw.subject_code}
               </span>
             </div>
-            <h3 className="text-[14px] font-bold text-gray-900 leading-snug group-hover:text-blue-600 transition-colors">
+            <h3 className="text-[13px] font-bold text-gray-800 leading-snug group-hover:text-blue-600 transition-colors">
               {hw.title}
             </h3>
           </div>
-          <div className={`px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 border ${
+          <div className={`px-2 py-0.5 rounded text-[9px] font-bold shrink-0 border ${
             isPending 
               ? 'bg-blue-50 text-blue-600 border-blue-100' 
               : 'bg-gray-50 text-gray-500 border-gray-100'
@@ -84,30 +91,30 @@ const StudentHomework: React.FC = () => {
         </div>
         
         {hw.description && (
-          <div className="bg-gray-50/80 rounded-lg p-3 mb-4 border border-gray-100">
-            <p className="text-[12px] text-gray-600 font-medium leading-relaxed line-clamp-3">
+          <div className="bg-gray-50/50 rounded-lg p-2.5 mb-3 border border-gray-100">
+            <p className="text-[11px] text-gray-600 font-medium leading-relaxed line-clamp-2">
               {hw.description}
             </p>
           </div>
         )}
 
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100/80">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between pt-2.5 border-t border-gray-100">
+          <div className="flex items-center gap-1.5">
             <div 
-              className="w-2 h-2 rounded-full animate-pulse"
+              className="w-1.5 h-1.5 rounded-full"
               style={{ backgroundColor: themeColor }}
             ></div>
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">
               {isPending ? 'Active' : 'Completed'}
             </span>
           </div>
           <button 
-            className="text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-1 group/btn"
+            className="text-[10px] font-bold px-3 py-1 rounded-md transition-all flex items-center gap-1 group/btn bg-gray-50 border border-gray-100 hover:bg-gray-100"
             style={{ color: themeColor }}
           >
-            <span>View Details</span>
-            <svg className="w-3 h-3 transform group-hover/btn:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="9 5l7 7-7 7" />
+            <span>View</span>
+            <svg className="w-2.5 h-2.5 transform group-hover/btn:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="9 5l7 7-7 7" />
             </svg>
           </button>
         </div>
@@ -116,14 +123,20 @@ const StudentHomework: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        {/* Header & Stats Unified Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+    <div className="min-h-screen pb-20 md:pb-0" style={{ backgroundColor: '#F0F2F5' }}>
+      {/* Mobile Header */}
+      <div className="md:hidden bg-[#002B5B] pt-6 pb-8 px-4">
+        <h1 className="text-lg font-bold text-white">Homework</h1>
+        <p className="text-[10px] mt-0.5 text-white/80">Manage assignments and tasks</p>
+      </div>
+
+      <div className="w-full px-3 py-3 md:px-4 md:py-4 lg:px-6">
+        {/* Desktop Header & Stats */}
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl font-bold text-gray-900">Homework</h1>
-              <p className="text-[10px] mt-0.5 font-medium text-gray-500">Manage your assignments and tasks</p>
+              <p className="text-[10px] mt-0.5 font-medium text-gray-500">Manage assignments and tasks</p>
             </div>
             <div className="flex items-center gap-3 bg-gray-50/50 p-2 rounded-xl border border-gray-100 shadow-sm self-start sm:self-auto">
               <div className="flex flex-col items-end px-3">
@@ -132,26 +145,18 @@ const StudentHomework: React.FC = () => {
               </div>
               <div className="w-px h-6 bg-gray-200"></div>
               <div className="flex flex-col items-end px-3">
-                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total</span>
-                <span className="text-sm font-bold text-gray-900 leading-none">{items.length}</span>
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Academic Year</span>
+                <span className="text-sm font-bold text-gray-900 leading-none">2026</span>
               </div>
             </div>
           </div>
         </div>
-
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Pending Section */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 px-1">
-              <div className="w-1 h-5 bg-blue-600 rounded-full"></div>
-              <h2 className="text-[11px] font-bold text-gray-900 uppercase tracking-widest">Active Assignments</h2>
-            </div>
-            
+          <div className="space-y-3">            
             {pending.length === 0 ? (
               <div className="bg-white rounded-lg p-8 text-center border border-gray-200 shadow-sm">
-                <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 text-green-500">
-                  <span className="text-xl">🎉</span>
-                </div>
+                
                 <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">All caught up! No pending homework</p>
               </div>
             ) : (
@@ -163,12 +168,12 @@ const StudentHomework: React.FC = () => {
 
           {/* Past Section */}
           {past.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex items-center gap-2 px-1">
-                <div className="w-1 h-5 bg-gray-400 rounded-full"></div>
-                <h2 className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Past Assignments</h2>
+                <div className="w-0.5 h-4 bg-gray-400 rounded-full"></div>
+                <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Past Assignments</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {past.map(hw => <HWCard key={hw._id} hw={hw} />)}
               </div>
             </div>

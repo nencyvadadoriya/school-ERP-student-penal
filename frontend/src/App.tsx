@@ -12,6 +12,7 @@ import ChangePassword from './pages/auth/ChangePassword';
 // Layouts
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import BottomNavigation from './components/BottomNavigation';
 // import FCMManager from './components/FCMManager';
 
 // Student Pages
@@ -44,7 +45,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
 
   return (
     <div className="flex h-screen w-full bg-gray-100 overflow-hidden">
-      <div className="flex-shrink-0 h-full">
+      <div className="hidden md:flex flex-shrink-0 h-full">
         <Sidebar 
           isOpen={isOpen} 
           toggleSidebar={toggleSidebar} 
@@ -53,12 +54,15 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
         />
       </div>
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-        <Header toggleSidebar={toggleSidebar} />
-        <main className="flex-1 overflow-y-auto bg-gray-100 w-full">
+        <div className="hidden md:block">
+          <Header toggleSidebar={toggleSidebar} />
+        </div>
+        <main className="flex-1 overflow-y-auto bg-gray-100 w-full pb-16 md:pb-0">
           <div className="w-full">
             {children}
           </div>
         </main>
+        <BottomNavigation />
       </div>
     </div>
   );

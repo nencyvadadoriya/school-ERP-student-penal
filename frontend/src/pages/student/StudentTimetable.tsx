@@ -199,27 +199,31 @@ const StudentTimetable: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        {/* Header & Stats Unified Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+      {/* Header & Stats Unified Container - Mobile Only */}
+      <div className="w-full bg-[#002B5B] shadow-sm p-4 mb-6 md:hidden" style={{ background: 'linear-gradient(135deg, #002B5B 0%)' }}>
+        <div className="w-full px-2 md:px-4 lg:px-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Class Timetable</h1>
-              <p className="text-[10px] mt-0.5 font-medium text-gray-500">View your weekly class schedule</p>
-            </div>
-            <div className="flex items-center gap-3 bg-gray-50/50 p-2 rounded-xl border border-gray-100 shadow-sm self-start sm:self-auto">
-              <div className="flex flex-col items-end px-3">
-                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Class</span>
-                <span className="text-sm font-bold text-blue-600 leading-none">{user?.class_code || '—'}</span>
-              </div>
-              <div className="w-px h-6 bg-gray-200"></div>
-              <div className="flex flex-col items-end px-3">
-                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Shift</span>
-                <span className="text-sm font-bold text-gray-900 leading-none">{shift || '—'}</span>
-              </div>
+              <h1 className="text-xl font-bold text-white">Class Timetable</h1>
+              <p className="text-[10px] mt-0.5 font-medium text-blue-100/80 uppercase tracking-wider">View your weekly class schedule</p>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Desktop Header - Original Style */}
+      <div className="hidden md:block w-full px-4 py-4 lg:px-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold text-gray-900">Class Timetable</h1>
+              <p className="text-sm font-medium text-gray-500">View your weekly class schedule</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full px-2 pb-3 md:px-4 md:pb-4 lg:px-6">
 
         {/* Desktop View - Grid Table */}
         {!isMobile ? (
@@ -293,15 +297,15 @@ const StudentTimetable: React.FC = () => {
           /* Mobile View - Day Selector */
           <div className="space-y-4 mb-6">
             {/* Day Selector */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2">
-              <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 overflow-hidden">
+              <div className="flex gap-1">
                 {days.map(day => (
                   <button
                     key={day}
                     onClick={() => setSelectedDay(day)}
-                    className={`px-4 py-2 rounded-xl font-bold text-[11px] uppercase tracking-widest whitespace-nowrap transition-all flex-1 text-center ${
+                    className={`px-1 py-2 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all flex-1 text-center ${
                       selectedDay === day 
-                        ? 'bg-blue-600 text-white shadow-md' 
+                        ? 'bg-[#002B5B] text-white shadow-md' 
                         : 'bg-white text-gray-400 border border-transparent'
                     }`}
                   >
@@ -312,11 +316,11 @@ const StudentTimetable: React.FC = () => {
             </div>
 
             {/* Periods for Selected Day */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               {selectedDayPeriods.length === 0 ? (
                 <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-sm">
                   <AlertCircle size={32} className="text-gray-200 mx-auto mb-3" />
-                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">No classes scheduled for {selectedDay}</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">No classes scheduled for {selectedDay}</p>
                 </div>
               ) : (
                 selectedDayPeriods.map((period: any, idx: number) => {
@@ -327,26 +331,27 @@ const StudentTimetable: React.FC = () => {
 
                   return (
                     <React.Fragment key={period._id || idx}>
-                      <div className="rounded-2xl border border-gray-100 p-4 shadow-sm transition-all relative overflow-hidden bg-white">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600"></div>
-                        <div className="flex items-start justify-between">
+                      <div className="rounded-xl border border-gray-100 p-3 shadow-sm transition-all relative overflow-hidden bg-white">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#002B5B]"></div>
+                        <div className="flex items-center justify-between gap-3">
                           <div className="flex-1 min-w-0">
-                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                              <BookOpen size={10} className="text-blue-600" />
-                              Period {period.period_number}
-                            </p>
-                            <h3 className="font-bold text-[14px] text-gray-900 uppercase tracking-tight mb-1 truncate">
-                              {period.subject_code || 'N/A'}
-                            </h3>
-                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide flex items-center gap-1.5">
-                              <Navigation2 size={10} className="text-gray-400" />
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="bg-blue-50 text-[#002B5B] px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider">
+                                P{period.period_number}
+                              </span>
+                              <h3 className="font-bold text-[11px] text-gray-900 uppercase tracking-tight truncate">
+                                {period.subject_code || 'N/A'}
+                              </h3>
+                            </div>
+                            <p className="text-[9px] font-medium text-gray-500 flex items-center gap-1.5">
+                              <Navigation2 size={8} className="text-gray-400" />
                               {period.teacher_name || 'TBA'}
                             </p>
                           </div>
-                          <div className="text-right flex flex-col items-end gap-1.5">
-                            <div className="bg-gray-50 px-2 py-1 rounded-lg border border-gray-100 flex items-center gap-1.5">
-                              <Clock size={10} className="text-blue-600" />
-                              <span className="text-[10px] font-bold text-gray-700">
+                          <div className="shrink-0">
+                            <div className="bg-gray-50 px-2 py-1 rounded-lg border border-gray-100 flex items-center gap-1">
+                              <Clock size={8} className="text-[#002B5B]" />
+                              <span className="text-[9px] font-bold text-gray-700">
                                 {toTimeStr(period?.start_time)} - {toTimeStr(period?.end_time)}
                               </span>
                             </div>
@@ -355,16 +360,16 @@ const StudentTimetable: React.FC = () => {
                       </div>
 
                       {breakTime && (
-                        <div className="bg-orange-50/50 rounded-2xl border border-orange-100 p-3 shadow-sm mx-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-xl bg-white shadow-sm flex items-center justify-center text-orange-500">
-                              <AlertCircle size={16} />
+                        <div className="bg-orange-50/50 rounded-xl border border-orange-100 p-2 shadow-sm mx-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center text-orange-500">
+                              <AlertCircle size={12} />
                             </div>
-                            <div>
-                              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">
+                            <div className="flex-1 flex items-center justify-between">
+                              <p className="text-[10px] font-bold text-gray-600 uppercase tracking-tight">
                                 {breakTime.break_name}
                               </p>
-                              <p className="text-[12px] font-bold text-gray-700 leading-none">
+                              <p className="text-[10px] font-bold text-orange-700">
                                 {toTimeStr(breakTime?.break_start_time)} - {toTimeStr(breakTime?.break_end_time)}
                               </p>
                             </div>

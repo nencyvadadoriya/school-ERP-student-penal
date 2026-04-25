@@ -336,7 +336,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isCollapsed, setIsCollapsed }) => {
                           }
                           onClick={() => toggleSidebar()}
                         >
-                          <item.icon className={`text-lg flex-shrink-0 ${isOpen ? 'animate-in fade-in slide-in-from-left-2 duration-300' : ''}`} />
+                          <item.icon className={`text-lg flex-shrink-0 group-hover:text-[#002B5B] ${isOpen ? 'animate-in fade-in slide-in-from-left-2 duration-300' : ''}`} />
                           <span className="text-sm font-semibold tracking-wide">{item.label}</span>
                         </NavLink>
                       </li>

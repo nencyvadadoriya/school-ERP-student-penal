@@ -5,6 +5,7 @@ import { feesAPI } from '../../services/api';
 import Badge from '../../components/Badge';
 import { Skeleton, CardSkeleton, TableRowSkeleton } from '../../components/Skeleton';
 import { useAuth } from '../../context/AuthContext';
+import PageHeader from '../../components/PageHeader';
 import { FaMoneyBillWave, FaDownload } from 'react-icons/fa';
 
 const StudentFees: React.FC = () => {
@@ -181,25 +182,35 @@ const StudentFees: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        {/* Header Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-[#002B5B] pt-6 pb-8 px-4">
+        <h1 className="text-lg font-bold text-white">My Fees</h1>
+        <p className="text-[10px] mt-0.5 text-white/80">Track and manage your academic fee payments</p>
+      </div>
+
+      <div className="w-full px-3 py-3 md:px-4 md:py-4 lg:px-6">
+        {/* Desktop Header & Stats */}
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-[#1e293b] tracking-tight">My Fees</h1>
-              <p className="text-xs mt-0.5 font-medium text-gray-500">
-                Track and manage your academic fee payments
-              </p>
+              <h1 className="text-xl font-bold text-gray-900">My Fees</h1>
+              <p className="text-[10px] mt-0.5 font-medium text-gray-500">Track and manage your academic fee payments</p>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">RECORDS FOUND:</span>
-              <span className="text-sm font-bold text-gray-700">{fees.length}</span>
+            <div className="flex items-center gap-3 bg-gray-50/50 p-2 rounded-xl border border-gray-100 shadow-sm self-start sm:self-auto">
+              <div className="flex flex-col items-end px-3">
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total Due</span>
+                <span className="text-sm font-bold text-red-600 leading-none">₹{totalDue.toLocaleString()}</span>
+              </div>
+              <div className="w-px h-6 bg-gray-200"></div>
+              <div className="flex flex-col items-end px-3">
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Academic Year</span>
+                <span className="text-sm font-bold text-gray-900 leading-none">2026</span>
+              </div>
             </div>
           </div>
         </div>
-
         {totalDue > 0 && (
-          <div className="bg-red-50 border border-red-100 rounded-2xl p-5 flex items-start gap-4 shadow-sm shadow-red-100/50 mb-6 animate-in slide-in-from-top-2">
+          <div className="bg-red-50 border border-red-100 rounded-2xl p-5 flex items-start gap-4 shadow-sm shadow-red-100/50 mb-4 relative z-10 animate-in slide-in-from-top-2">
             <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600 shrink-0">
               <FaMoneyBillWave className="text-xl" />
             </div>
@@ -221,44 +232,45 @@ const StudentFees: React.FC = () => {
         ) : (
           <>
             {/* Mobile View: Cards */}
-            <div className="sm:hidden space-y-4">
+            <div className="sm:hidden space-y-3">
               {fees.map(f => (
-                <div key={f._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group active:scale-[0.98] transition-all">
-                  <div className={`h-1.5 ${f.status === 'Paid' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <div className="p-5">
-                    <div className="flex justify-between items-start mb-4">
+                <div key={f._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group active:scale-[0.98] transition-all">
+                  <div className={`h-1 ${f.status === 'Paid' ? 'bg-[#002B5B]' : 'bg-[#002B5B]'}`}></div>
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-3">
                       <div>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Fee Type</p>
-                        <h3 className="text-base font-semibold text-gray-900 mt-0.5">{f.fee_type}</h3>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Fee Type</p>
+                        <h3 className="text-sm font-bold text-[#002B5B] mt-0.5">{f.fee_type}</h3>
                       </div>
-                      <Badge status={f.status} />
+                      <div className="flex items-center gap-2">
+                        <Badge status={f.status} />
+                        <button 
+                          onClick={() => downloadReceipt(f)}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#e6f0f9] text-[#002B5B] hover:bg-[#d0e1f2] transition-colors shadow-sm"
+                          title="Download Receipt"
+                        >
+                          <FaDownload size={12} />
+                        </button>
+                      </div>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4 border-t border-gray-50 pt-4">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-gray-50 pt-3">
                       <div>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Total Amount</p>
-                        <p className="text-sm font-semibold text-gray-900 mt-1">₹{f.total_amount?.toLocaleString()}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Total Amount</p>
+                        <p className="text-xs font-bold text-gray-900 mt-0.5">₹{f.total_amount?.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Amount Paid</p>
-                        <p className="text-sm font-semibold text-green-600 mt-1">₹{f.amount_paid?.toLocaleString()}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Amount Paid</p>
+                        <p className="text-xs font-bold text-green-600 mt-0.5">₹{f.amount_paid?.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Balance</p>
-                        <p className="text-sm font-semibold text-red-600 mt-1">₹{(f.total_amount - f.amount_paid).toLocaleString()}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Balance</p>
+                        <p className="text-xs font-bold text-red-600 mt-0.5">₹{(f.total_amount - f.amount_paid).toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Due Date</p>
-                        <p className="text-sm font-semibold text-gray-700 mt-1">{new Date(f.due_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Due Date</p>
+                        <p className="text-xs font-bold text-gray-700 mt-0.5">{new Date(f.due_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                       </div>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-gray-50">
-                      <button 
-                        onClick={() => downloadReceipt(f)}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 text-xs font-black rounded-xl bg-[#FFD700] text-[#002B5B] hover:bg-[#FFD700]/90 transition-colors uppercase tracking-widest shadow-sm"
-                      >
-                        <FaDownload /> Download Receipt
-                      </button>
                     </div>
                   </div>
                 </div>

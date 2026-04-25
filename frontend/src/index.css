@@ -51,22 +51,22 @@ code {
   --primary: #002B5B;
   --primary-light: #1e5a96;
   --primary-dark: #001829;
-  
+
   --secondary: #2D54A8;
   --secondary-light: #4a73c4;
   --secondary-dark: #1a3060;
-  
+
   --accent: #FFC107;
   --success: #10B981;
   --warning: #F59E0B;
   --danger: #EF4444;
-  
+
   --background: #F0F2F5;
   --white: #FFFFFF;
-  
+
   --text-primary: #1F2937;
   --text-secondary: #6B7280;
-  
+
   --border-color: #E5E7EB;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -74,6 +74,7 @@ code {
 
 /* Custom components */
 @layer components {
+
   /* Buttons */
   .btn-primary {
     @apply bg-[#002B5B] hover:bg-[#001829] text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
@@ -191,6 +192,7 @@ code {
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -206,6 +208,7 @@ code {
       opacity: 0;
       transform: translateX(-20px);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -217,9 +220,12 @@ code {
   }
 
   @keyframes pulseSoft {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.8;
     }
@@ -233,9 +239,11 @@ code {
     0% {
       transform: translateY(0px);
     }
+
     50% {
       transform: translateY(-10px);
     }
+
     100% {
       transform: translateY(0px);
     }
@@ -265,6 +273,7 @@ code {
 
   /* Responsive Utilities */
   @media (max-width: 768px) {
+
     /* Mobile padding fixes */
     main,
     .main-content,

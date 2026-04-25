@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaSchool, FaUserGraduate, FaChalkboardTeacher, FaLock, FaKey, FaCamera, FaTrashAlt } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaPhone, FaIdCard, FaSchool, FaUserGraduate, FaChalkboardTeacher, FaLock, FaKey, FaCamera, FaTimes, FaTrashAlt } from 'react-icons/fa';
 import { studentAPI } from '../services/api';
 import { Skeleton, CardSkeleton } from '../components/Skeleton';
 import { toast } from 'react-toastify';
@@ -26,6 +26,8 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
 
   React.useEffect(() => {
     if (user) {
@@ -173,9 +175,14 @@ const Profile: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
+      <div className="md:hidden bg-[#002B5B] pt-6 pb-8 px-4">
+        <h1 className="text-lg font-bold text-white">My Profile</h1>
+        <p className="text-[10px] mt-0.5 text-white/80 uppercase tracking-wider">Manage your account and identity</p>
+      </div>
+
       <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        {/* Header Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+        {/* Desktop Header Container */}
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl font-bold text-gray-900">My Profile</h1>
@@ -188,6 +195,28 @@ const Profile: React.FC = () => {
           </div>
         </div>
         
+        {/* Mobile Quick Actions */}
+        <div className="grid grid-cols-2 gap-3 mb-6 md:hidden">
+          <button 
+            onClick={() => setShowPasswordModal(true)}
+            className="flex items-center justify-center gap-2 p-3 bg-white rounded-xl shadow-sm border border-gray-100 active:scale-95 transition-all group"
+          >
+            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+              <FaLock size={12} />
+            </div>
+            <span className="text-[10px] font-bold text-gray-700 uppercase tracking-tight">Security</span>
+          </button>
+          <button 
+            onClick={() => setShowPinModal(true)}
+            className="flex items-center justify-center gap-2 p-3 bg-white rounded-xl shadow-sm border border-gray-100 active:scale-95 transition-all group"
+          >
+            <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+              <FaKey size={12} />
+            </div>
+            <span className="text-[10px] font-bold text-gray-700 uppercase tracking-tight">Access PIN</span>
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - ID Card & Info */}
           <div className="lg:col-span-2 space-y-6">
@@ -241,7 +270,7 @@ const Profile: React.FC = () => {
                     />
                   </div>
                 </div>
-                <div className="absolute top-5 right-6 text-white text-right">
+                <div className="absolute top-5 right-6 text-white text-right hidden sm:block">
                   <p className="text-[8px] font-bold opacity-60 uppercase tracking-widest">School ERP</p>
                   <p className="text-[13px] font-bold tracking-tight uppercase">Student Digital ID</p>
                 </div>
@@ -315,9 +344,9 @@ const Profile: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column - Security Settings */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-100">
+          {/* Right Column - Security Settings - Hidden on Mobile */}
+          <div className="hidden lg:block space-y-6">
+            <div id="security-section" className="bg-white rounded-2xl shadow-sm p-5 border border-gray-100">
               <div className="flex items-center gap-2.5 mb-6">
                 <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                   <FaLock className="text-[14px]" />
@@ -370,7 +399,7 @@ const Profile: React.FC = () => {
 
               <div className="my-6 border-t border-gray-50"></div>
 
-              <div className="flex items-center gap-2.5 mb-5">
+              <div id="pin-section" className="flex items-center gap-2.5 mb-5">
                 <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-orange-500">
                   <FaKey className="text-[14px]" />
                 </div>
@@ -414,6 +443,166 @@ const Profile: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-[2px]" onClick={() => setShowPasswordModal(false)}>
+          <div className="bg-[#F8FAFC] w-full sm:max-w-md rounded-t-[2rem] sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] relative animate-in slide-in-from-bottom duration-300" onClick={e => e.stopPropagation()}>
+            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto my-3 sm:hidden shrink-0"></div>
+            
+            <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-white rounded-t-[2rem] sm:rounded-t-3xl">
+              <div>
+                <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">Update Password</h3>
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Secure your account</p>
+              </div>
+              <button onClick={() => setShowPasswordModal(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors">
+                <FaTimes size={14} />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6">
+              <form onSubmit={async (e) => {
+                await handlePasswordChange(e);
+                setShowPasswordModal(false);
+              }} className="space-y-5">
+                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm space-y-4">
+                  <div>
+                    <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Current Password</label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      className="w-full bg-gray-50/50 border border-gray-200 rounded-xl px-4 py-3 text-[12px] font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#002B5B]/10 transition-all"
+                      value={passwordData.currentPassword}
+                      onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">New Password</label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      className="w-full bg-gray-50/50 border border-gray-200 rounded-xl px-4 py-3 text-[12px] font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#002B5B]/10 transition-all"
+                      value={passwordData.newPassword}
+                      onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Confirm Password</label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      className="w-full bg-gray-50/50 border border-gray-200 rounded-xl px-4 py-3 text-[12px] font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#002B5B]/10 transition-all"
+                      value={passwordData.confirmPassword}
+                      onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswordModal(false)}
+                    className="flex-1 px-4 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-gray-200 text-gray-500 hover:bg-gray-50 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 bg-[#002B5B] text-white py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-blue-900/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+                  >
+                    {loading ? 'Updating...' : 'Update'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PIN Change Modal */}
+      {showPinModal && (
+        <div className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-[2px]" onClick={() => setShowPinModal(false)}>
+          <div className="bg-[#F8FAFC] w-full sm:max-w-md rounded-t-[2rem] sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] relative animate-in slide-in-from-bottom duration-300" onClick={e => e.stopPropagation()}>
+            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto my-3 sm:hidden shrink-0"></div>
+
+            <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-white rounded-t-[2rem] sm:rounded-t-3xl">
+              <div>
+                <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">Update Access PIN</h3>
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">4-Digit Security PIN</p>
+              </div>
+              <button onClick={() => setShowPinModal(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:text-gray-600 transition-colors">
+                <FaTimes size={14} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+              <form onSubmit={async (e) => {
+                await handlePinChange(e);
+                setShowPinModal(false);
+              }} className="space-y-5">
+                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm space-y-4">
+                  <div>
+                    <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Current PIN</label>
+                    <input
+                      type="password"
+                      maxLength={4}
+                      required
+                      placeholder="••••"
+                      className="w-full bg-gray-50/50 border border-gray-200 rounded-xl px-4 py-3 text-center text-lg tracking-[0.5em] font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#002B5B]/10 transition-all"
+                      value={pinData.currentPin}
+                      onChange={(e) => setPinData({...pinData, currentPin: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">New PIN</label>
+                    <input
+                      type="password"
+                      maxLength={4}
+                      required
+                      placeholder="••••"
+                      className="w-full bg-gray-50/50 border border-gray-200 rounded-xl px-4 py-3 text-center text-lg tracking-[0.5em] font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#002B5B]/10 transition-all"
+                      value={pinData.newPin}
+                      onChange={(e) => setPinData({...pinData, newPin: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-1">Confirm PIN</label>
+                    <input
+                      type="password"
+                      maxLength={4}
+                      required
+                      placeholder="••••"
+                      className="w-full bg-gray-50/50 border border-gray-200 rounded-xl px-4 py-3 text-center text-lg tracking-[0.5em] font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#002B5B]/10 transition-all"
+                      value={pinData.confirmPin}
+                      onChange={(e) => setPinData({...pinData, confirmPin: e.target.value})}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowPinModal(false)}
+                    className="flex-1 px-4 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest border border-gray-200 text-gray-500 hover:bg-gray-50 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 bg-blue-900 text-white py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-blue-900/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+                  >
+                    {loading ? 'Updating...' : 'Update'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

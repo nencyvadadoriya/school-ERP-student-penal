@@ -3,6 +3,7 @@ import { FaSearch, FaCalendarAlt, FaClock, FaBook, FaInfoCircle, FaClipboardList
 import { examAPI } from '../../services/api';
 import { Skeleton, CardSkeleton } from '../../components/Skeleton';
 import { useAuth } from '../../context/AuthContext';
+import PageHeader from '../../components/PageHeader';
 
 const StudentExams: React.FC = () => {
   const { user } = useAuth();
@@ -81,9 +82,15 @@ const StudentExams: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        {/* Header & Stats Unified Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-[#002B5B] pt-6 pb-8 px-4">
+        <h1 className="text-lg font-bold text-white">Upcoming Exams</h1>
+        <p className="text-[10px] mt-0.5 text-white/80">View your exam schedule and details</p>
+      </div>
+
+      <div className="w-full px-3 py-3 md:px-4 md:py-4 lg:px-6">
+        {/* Desktop Header & Stats */}
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl font-bold text-gray-900">Upcoming Exams</h1>
@@ -96,20 +103,19 @@ const StudentExams: React.FC = () => {
               </div>
               <div className="w-px h-6 bg-gray-200"></div>
               <div className="flex flex-col items-end px-3">
-                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total</span>
-                <span className="text-sm font-bold text-gray-900 leading-none">{exams.length}</span>
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Academic Year</span>
+                <span className="text-sm font-bold text-gray-900 leading-none">2026</span>
               </div>
             </div>
           </div>
         </div>
-
         {/* Search Bar Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 mb-6">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-2 md:p-3 mb-3 md:mb-4 relative z-10 mx-0 md:mx-0">
           <div className="relative group">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
+            <FaSearch className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-colors text-sm md:text-base" />
             <input 
-              className="w-full bg-gray-50/50 border border-gray-100 rounded-xl py-2.5 pl-11 pr-4 text-[13px] font-medium focus:outline-none focus:ring-2 focus:ring-blue-50 focus:border-blue-600 transition-all" 
-              placeholder="Search exams, subjects, or types..." 
+              className="w-full bg-gray-50/50 border border-gray-100 rounded-lg md:rounded-xl py-2 md:py-2.5 pl-9 md:pl-11 pr-3 md:pr-4 text-xs md:text-[13px] font-medium focus:outline-none focus:ring-2 focus:ring-blue-50 focus:border-blue-600 transition-all" 
+              placeholder="Search exams..." 
               value={search} 
               onChange={e => setSearch(e.target.value)} 
             />
@@ -129,16 +135,16 @@ const StudentExams: React.FC = () => {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="bg-white rounded-2xl p-12 text-center border border-gray-100 shadow-sm">
-              <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaClipboardList className="text-gray-300 text-2xl" />
+            <div className="bg-white rounded-xl md:rounded-2xl p-8 md:p-12 text-center border border-gray-100 shadow-sm">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                <FaClipboardList className="text-gray-300 text-xl md:text-2xl" />
               </div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">No exams found matching your search</p>
+              <p className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-wider">No exams found</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map(ex => (
-                <div key={ex._id} className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md transition-all duration-300 relative">
+                <div key={ex._id} className="group bg-white border border-gray-100 rounded-xl md:rounded-2xl overflow-hidden hover:shadow-md transition-all duration-300 relative">
                   <div className={`h-1.5 ${typeColors[ex.exam_type]?.split(' ')[0] || 'bg-blue-600'}`} />
                   <div className="p-4">
                     <div className="flex justify-between items-start gap-3 mb-4">

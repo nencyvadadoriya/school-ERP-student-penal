@@ -59,9 +59,15 @@ const StudentResults: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        {/* Header & Stats Unified Container */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-[#002B5B] pt-6 pb-8 px-4">
+        <h1 className="text-lg font-bold text-white">My Results</h1>
+        <p className="text-[10px] mt-0.5 text-white/80">Track your academic performance</p>
+      </div>
+      
+      <div className="w-full px-3 py-3 md:px-4 md:py-4 lg:px-6">
+        {/* Desktop Header & Stats */}
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl font-bold text-gray-900">My Results</h1>
@@ -80,64 +86,75 @@ const StudentResults: React.FC = () => {
             </div>
           </div>
         </div>
+        
+        {/* Mobile Stats Bar */}
+        <div className="md:hidden flex items-center gap-2 mb-3">
+          <div className="flex-1 bg-white rounded-lg p-2 border border-gray-100 shadow-sm">
+            <span className="text-[8px] text-gray-400 uppercase">Published</span>
+            <span className="text-sm font-bold text-[#002B5B] ml-2">{results.length}</span>
+          </div>
+          <div className="flex-1 bg-white rounded-lg p-2 border border-gray-100 shadow-sm">
+            <span className="text-[8px] text-gray-400 uppercase">Year</span>
+            <span className="text-sm font-bold text-gray-700 ml-2">2026</span>
+          </div>
+        </div>
 
         {results.length === 0 ? (
-          <div className="bg-white rounded-2xl p-16 text-center shadow-sm border border-gray-100">
-            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-200">
-              <FaFileAlt className="text-2xl" />
+          <div className="bg-white rounded-xl md:rounded-2xl p-10 md:p-16 text-center shadow-sm border border-gray-100">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 text-gray-200">
+              <FaFileAlt className="text-xl md:text-2xl" />
             </div>
-            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">No results published yet</p>
+            <p className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-wider">No results published yet</p>
           </div>
         ) : (
           <div className="space-y-4">
             <div className="flex items-center gap-2 px-1">
-              <div className="w-1 h-5 bg-blue-600 rounded-full"></div>
+              <div className="w-1 h-5 bg-[#002B5B] rounded-full"></div>
               <h2 className="text-[11px] font-bold text-gray-900 uppercase tracking-widest">Scorecard Details</h2>
             </div>
 
             {/* Mobile View: Result Cards */}
-            <div className="md:hidden space-y-3">
+            <div className="md:hidden space-y-2">
               {results.map(r => {
                 const pct = Math.round((r.marks_obtained / r.total_marks) * 100);
+                const isPass = pct >= 35;
                 return (
-                  <div key={r._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group active:scale-[0.98] transition-all relative">
-                    <div className={`h-1 ${pct >= 35 ? 'bg-blue-600' : 'bg-red-500'}`}></div>
-                    <div className="p-4">
-                      <div className="flex justify-between items-start mb-4 gap-3">
+                  <div key={r._id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group active:scale-[0.98] transition-all relative">
+                    <div className={`h-0.5 ${isPass ? 'bg-[#002B5B]' : 'bg-red-500'}`}></div>
+                    <div className="p-3">
+                      <div className="flex justify-between items-start gap-2 mb-2">
                         <div className="min-w-0 flex-1">
-                          <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">{r.exam_id?.exam_type || 'EXAM'}</p>
-                          <h3 className="text-[14px] font-bold text-gray-900 leading-tight uppercase tracking-tight truncate">{r.exam_id?.exam_name || '—'}</h3>
+                          <p className="text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">{r.exam_id?.exam_type || 'EXAM'}</p>
+                          <h3 className="text-[12px] font-bold text-black leading-tight tracking-tight truncate">{r.exam_id?.exam_name || '—'}</h3>
                         </div>
-                        <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-widest shrink-0 ${gradeColor[r.grade] || 'bg-gray-100 text-gray-700'}`}>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider shrink-0 ${isPass ? 'bg-[#002B5B]/10 text-[#002B5B]' : 'bg-red-50 text-red-600'}`}>
                           {r.grade}
                         </span>
                       </div>
                       
-                      <div className="grid grid-cols-2 gap-3 border-y border-gray-50 py-3 mb-3">
+                      <div className="flex items-center justify-between py-2 border-t border-gray-50">
                         <div>
-                          <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Subject</p>
-                          <p className="text-[12px] font-bold text-gray-900 mt-0.5 uppercase truncate">{r.subject_code}</p>
+                          <p className="text-[7px] font-bold text-gray-400 uppercase tracking-wider">Subject</p>
+                          <p className="text-[11px] font-bold text-gray-900 truncate">{r.subject_code}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Score</p>
-                          <p className="text-[12px] font-bold text-gray-900 mt-0.5">
+                          <p className="text-[7px] font-bold text-gray-400 uppercase tracking-wider">Score</p>
+                          <p className="text-[11px] font-bold text-gray-900">
                             {r.marks_obtained}<span className="text-gray-400 font-medium">/{r.total_marks}</span>
-                            <span className="ml-1 text-[10px] text-blue-600 font-bold">({pct}%)</span>
+                            <span className={`ml-1 text-[9px] font-bold ${isPass ? 'text-[#002B5B]' : 'text-red-600'}`}>({pct}%)</span>
                           </p>
                         </div>
                       </div>
 
                       {r.remarks && (
-                        <div className="flex items-center gap-2">
-                          <div className="w-1 h-1 rounded-full bg-blue-400 shrink-0"></div>
-                          <p className="text-[11px] text-gray-500 font-medium italic truncate">"{r.remarks}"</p>
+                        <div className="pt-1.5 border-t border-gray-50">
+                          <p className="text-[9px] text-gray-500 font-medium italic truncate">"{r.remarks}"</p>
                         </div>
                       )}
                     </div>
                   </div>
                 );
-              })}
-            </div>
+              })}</div>
 
             {/* Desktop View: Table */}
             <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

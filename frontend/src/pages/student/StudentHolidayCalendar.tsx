@@ -76,7 +76,7 @@ const HolidayCalendar: React.FC = () => {
 
     // Empty slots for previous month
     for (let i = 0; i < startDay; i++) {
-      days.push(<div key={`empty-${i}`} className="min-h-[100px] sm:min-h-[120px] border-r border-b border-gray-100 bg-white/50"></div>);
+      days.push(<div key={`empty-${i}`} className="min-h-[60px] sm:min-h-[120px] border-r border-b border-gray-100 bg-white/50"></div>);
     }
 
     // Days of the current month
@@ -92,34 +92,39 @@ const HolidayCalendar: React.FC = () => {
       days.push(
         <div
           key={day}
-          className={`min-h-[100px] sm:min-h-[120px] p-2 border-r border-b border-gray-100 transition-all relative group overflow-hidden ${
+          className={`min-h-[60px] sm:min-h-[120px] p-1.5 border-r border-b border-gray-100 transition-all relative group overflow-hidden ${
             isToday ? 'bg-orange-50/20' : 'bg-white hover:bg-gray-50/50'
           }`}
         >
           <div className="flex justify-start items-start">
-            <span className={`text-[11px] font-semibold ${isToday ? 'text-orange-600' : 'text-gray-900'}`}>
+            <span className={`text-[10px] font-bold ${isToday ? 'text-orange-600' : 'text-gray-900'}`}>
               {day}
             </span>
           </div>
-          <div className="mt-2 space-y-1">
-            {dayHolidays.map((h, idx) => (
-              <div
-                key={`pub-${idx}`}
-                className="text-[9px] leading-tight px-2 py-1 bg-blue-50/80 text-blue-700 rounded-sm font-medium uppercase tracking-tight truncate border-l-2 border-blue-400"
-                title={h.name}
-              >
-                {h.name}
-              </div>
-            ))}
-            {dayCustomEvents.map((e, idx) => (
-              <div
-                key={`custom-${idx}`}
-                className="text-[9px] leading-tight px-2 py-1 bg-blue-50/80 text-blue-700 rounded-sm font-medium uppercase tracking-tight truncate border-l-2 border-blue-400"
-                title={e.title}
-              >
-                {e.title}
-              </div>
-            ))}
+          <div className="mt-1 space-y-0.5">
+            {(dayHolidays.length > 0 || dayCustomEvents.length > 0) && (
+              <div className="w-full h-1.5 bg-blue-500 rounded-full animate-pulse md:hidden"></div>
+            )}
+            <div className="hidden md:block space-y-1">
+              {dayHolidays.map((h, idx) => (
+                <div
+                  key={`pub-${idx}`}
+                  className="text-[9px] leading-tight px-2 py-1 bg-blue-50/80 text-blue-700 rounded-sm font-medium uppercase tracking-tight truncate border-l-2 border-blue-400"
+                  title={h.name}
+                >
+                  {h.name}
+                </div>
+              ))}
+              {dayCustomEvents.map((e, idx) => (
+                <div
+                  key={`custom-${idx}`}
+                  className="text-[9px] leading-tight px-2 py-1 bg-blue-50/80 text-blue-700 rounded-sm font-medium uppercase tracking-tight truncate border-l-2 border-blue-400"
+                  title={e.title}
+                >
+                  {e.title}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       );
@@ -130,67 +135,88 @@ const HolidayCalendar: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-[#002B5B] pt-6 pb-8 px-4">
+        <h1 className="text-lg font-bold text-white">Holiday Calendar</h1>
+        <p className="text-[10px] mt-0.5 text-white/80">View upcoming holidays and school breaks</p>
+      </div>
+
+      <div className="w-full px-3 py-3 md:px-4 md:py-4 lg:px-6">
+        {/* Desktop Header & Stats */}
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-xl font-bold text-[#1e293b] tracking-tight ">Holiday Calendar</h1>
-              <p className="text-[10px] font-medium text-gray-500 mt-0.5 uppercase tracking-wider">View upcoming holidays and school breaks</p>
-            </div>
-            <div className="flex items-center bg-gray-50 rounded-lg p-0.5 border border-gray-100 self-start sm:self-auto">
-              <button onClick={prevMonth} className="w-7 h-7 flex items-center justify-center bg-white hover:bg-gray-100 rounded-md shadow-sm border border-gray-200 transition-all text-gray-500 active:scale-95">
-                <FaChevronLeft size={10} />
-              </button>
-              <span className="px-4 py-1 text-[10px] font-bold text-gray-900 min-w-[100px] text-center uppercase tracking-widest">
-                {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-              </span>
-              <button onClick={nextMonth} className="w-7 h-7 flex items-center justify-center bg-white hover:bg-gray-100 rounded-md shadow-sm border border-gray-200 transition-all text-gray-500 active:scale-95">
-                <FaChevronRight size={10} />
-              </button>
+            <h1 className="text-2xl font-bold text-gray-900">Holiday Calendar</h1>
+            <p className="text-sm mt-0.5 font-medium text-gray-500">View upcoming holidays and school breaks</p>
+            <div className="flex items-center gap-3 bg-gray-50/50 p-2 rounded-xl border border-gray-100 shadow-sm self-start sm:self-auto">
+              <div className="flex flex-col items-end px-3">
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Events</span>
+                <span className="text-sm font-bold text-blue-600 leading-none">
+                  {holidays.filter(h => {
+                    const d = new Date(h.date.iso);
+                    return d.getMonth() === currentDate.getMonth() && d.getFullYear() === currentDate.getFullYear();
+                  }).length + customEvents.filter(e => {
+                    const d = e.event_date ? new Date(e.event_date) : null;
+                    return d && d.getMonth() === currentDate.getMonth() && d.getFullYear() === currentDate.getFullYear();
+                  }).length}
+                </span>
+              </div>
+              <div className="w-px h-6 bg-gray-200"></div>
+              <div className="flex flex-col items-end px-3">
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Academic Year</span>
+                <span className="text-sm font-bold text-gray-900 leading-none">2026</span>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Info Notice */}
-        <div className="mb-6">
-          <div className="bg-[#FFF8F1] border border-[#FFE7D1] text-[#A35200] px-4 py-2.5 rounded-md flex items-center gap-3 text-[10px] font-semibold uppercase tracking-wider shadow-sm">
-            <FaInfoCircle className="flex-shrink-0 text-orange-400" size={14} />
-            <p>School calendar is active. Public holidays may vary by region.</p>
+        <div className="flex justify-center md:justify-between items-center mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-1 md:p-1.5 flex items-center gap-0.5 md:gap-1">
+            <button onClick={prevMonth} className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white hover:bg-gray-50 rounded-lg shadow-sm border border-gray-100 transition-all text-gray-500 active:scale-95">
+              <FaChevronLeft size={8} className="md:hidden" />
+              <FaChevronLeft size={10} className="hidden md:block" />
+            </button>
+            <span className="px-2 md:px-4 py-1 text-[9px] md:text-[11px] font-bold text-gray-900 min-w-[100px] md:min-w-[120px] text-center uppercase tracking-widest">
+              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </span>
+            <button onClick={nextMonth} className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center bg-white hover:bg-gray-50 rounded-lg shadow-sm border border-gray-100 transition-all text-gray-500 active:scale-95">
+              <FaChevronRight size={8} className="md:hidden" />
+              <FaChevronRight size={10} className="hidden md:block" />
+            </button>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
-          <div className="grid grid-cols-7 bg-[#FDFDFD]">
-            {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
-              <div key={day} className="py-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest border-r border-gray-100 last:border-r-0">
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-4">
+          <div className="grid grid-cols-7 bg-[#FDFDFD] border-b border-gray-100">
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
+              <div key={day} className="py-2 text-center text-[9px] font-black text-gray-400 uppercase tracking-widest">
                 {day}
               </div>
             ))}
           </div>
 
           {loading ? (
-            <div className="p-4">
+            <div className="p-2">
               <div className="grid grid-cols-7 gap-px bg-gray-100">
                 {Array.from({ length: 35 }).map((_, i) => (
-                  <Skeleton key={i} className="h-24 sm:h-32 w-full" />
+                  <Skeleton key={i} className="h-16 w-full" />
                 ))}
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-7 border-t border-l border-gray-100">
+            <div className="grid grid-cols-7">
               {renderCalendar()}
             </div>
           )}
         </div>
 
-        {/* Events List for Month */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6">
-          <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2 uppercase tracking-tight">
-            <div className="w-1 h-5 bg-[#002B5B] rounded-full"></div>
+        {/* Compact Events List for Month */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-3 mb-4">
+          <h2 className="text-[10px] font-black text-gray-900 mb-3 flex items-center gap-1.5 uppercase tracking-tight">
+            <div className="w-0.5 h-3 bg-[#002B5B] rounded-full"></div>
             Events in {monthNames[currentDate.getMonth()]}
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {holidays
               .filter(h => {
                 const d = new Date(h.date.iso);

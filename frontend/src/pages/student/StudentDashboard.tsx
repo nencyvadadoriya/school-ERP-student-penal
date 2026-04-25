@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   BarChart3, TrendingUp, AlertCircle, Clock, Award,
   Calendar, BookOpen, DollarSign, FileText, ChevronRight,
-  ArrowUp, ArrowDown, GraduationCap, Users, Layout, ClipboardList
+  ArrowUp, ArrowDown, GraduationCap, Users, Layout, ClipboardList , Wallet,
+  X
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { dashboardAPI, homeworkAPI } from '../../services/api';
@@ -18,6 +19,8 @@ const StudentDashboard: React.FC = () => {
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  const [showCharts, setShowCharts] = useState<boolean>(false);
 
   const theme = {
     primary: '#002B5B',
@@ -144,20 +147,20 @@ const StudentDashboard: React.FC = () => {
     const colorScheme = colors[color] || colors.primary;
 
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-3.5 hover:shadow-sm transition-shadow duration-200">
+      <div className="bg-white rounded-lg border border-gray-100 p-3 md:p-3.5 hover:shadow-sm transition-shadow duration-200">
         <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <p className="text-[11px] font-semibold text-gray-500 mb-0.5 uppercase tracking-wider">{title}</p>
-            <div className="flex items-baseline gap-1.5">
-              <p className="text-xl font-bold" style={{ color: colorScheme.text }}>
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] md:text-[10px] font-semibold text-gray-500 mb-0.5 uppercase tracking-wider truncate">{title}</p>
+            <div className="flex items-baseline gap-1">
+              <p className="text-base md:text-lg font-bold" style={{ color: colorScheme.text }}>
                 {value}
               </p>
               {trend && (
-                <span className="flex items-center gap-0.5 text-[10px] font-bold">
+                <span className="flex items-center gap-0.5 text-[9px] md:text-[10px] font-bold">
                   {trend > 0 ? (
-                    <ArrowUp size={12} style={{ color: '#10B981' }} />
+                    <ArrowUp size={10} style={{ color: '#10B981' }} />
                   ) : (
-                    <ArrowDown size={12} style={{ color: '#EF4444' }} />
+                    <ArrowDown size={10} style={{ color: '#EF4444' }} />
                   )}
                   <span style={{ color: trend > 0 ? '#10B981' : '#EF4444' }}>
                     {Math.abs(trend)}%
@@ -165,13 +168,13 @@ const StudentDashboard: React.FC = () => {
                 </span>
               )}
             </div>
-            {subtile && <p className="text-[10px] text-gray-400 font-medium mt-0.5">{subtile}</p>}
+            {subtile && <p className="text-[9px] md:text-[10px] text-gray-400 font-medium mt-0.5">{subtile}</p>}
           </div>
           <div 
-            className="p-2 rounded-lg"
+            className="p-1.5 md:p-2 rounded-lg flex-shrink-0 ml-1"
             style={{ backgroundColor: colorScheme.bg }}
           >
-            <Icon size={18} style={{ color: colorScheme.icon }} />
+            <Icon size={16} className="md:w-[18px] md:h-[18px]" style={{ color: colorScheme.icon }} />
           </div>
         </div>
       </div>
@@ -179,20 +182,44 @@ const StudentDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: theme.background }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        {/* Header */}
-        <div className="mb-4">
+    <div className="min-h-screen pb-20 md:pb-0" style={{ backgroundColor: theme.background }}>
+      {/* Mobile Proper Header - Only for Dashboard */}
+      <div className="md:hidden bg-white px-5 py-3 flex items-center justify-between border-b border-gray-100">
+        <div className="flex items-center gap-2">
+         
+          <h2 className="text-base font-bold text-[#002B5B]">SmartSchool ERP</h2>
+        </div>
+        <img 
+          src={user?.profile_image || "https://ui-avatars.com/api/?name=" + (user?.first_name || 'User') + "&background=random"} 
+          alt="Profile" 
+          className="w-9 h-9 rounded-lg border border-gray-200 object-cover"
+        />
+      </div>
+
+      {/* Mobile Header with Rounded Shape */}
+      <div className="md:hidden bg-[#002B5B] pt-10 pb-12 px-5 rounded-b-[35px] relative">
+        <div className="text-white">
+          <h1 className="text-xl font-bold">Welcome, {user?.first_name || 'Student'}</h1>
+          <div className="flex items-center gap-2 mt-1 opacity-80">
+            <Calendar size={12} />
+            <span className="text-[11px]">{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full px-3 -mt-6 relative z-10 md:mt-0 md:py-6 lg:px-8">
+        {/* Desktop Header */}
+        <div className="hidden md:block mb-6">
           <h1 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>
             Welcome, {user?.first_name || 'Student'}
           </h1>
-          <p style={{ color: theme.textSecondary }} className="text-xs mt-0.5 font-medium">
+          <p style={{ color: theme.textSecondary }} className="text-sm mt-1 font-medium">
             Here's your academic performance overview
           </p>
         </div>
 
-        {/* Main Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        {/* Main Stats Grid - Same as desktop but visible on mobile */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-6">
           <StatCard 
             title="Attendance" 
             value={`${data?.attendancePercentage || 0}%`}
@@ -224,8 +251,101 @@ const StudentDashboard: React.FC = () => {
           />
         </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        {/* View Stats Button - Mobile Only */}
+        <button 
+          onClick={() => setShowCharts(true)}
+          className="md:hidden w-full bg-[#2D54A8] text-white py-3 rounded-xl mb-6 flex items-center justify-between px-4 shadow-md text-sm"
+        >
+          <div className="flex items-center gap-2">
+            <TrendingUp size={16} />
+            <span className="font-bold text-sm">View All Charts</span>
+          </div>
+          <ChevronRight size={16} />
+        </button>
+
+        {/* Charts Full-screen Overlay - Mobile Only */}
+        {showCharts && (
+          <div className="fixed inset-0 z-[100] bg-[#F8FAFC] overflow-y-auto pb-24">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4 sticky top-0 bg-[#F8FAFC]/90 backdrop-blur-sm py-2 z-10">
+                <div>
+                  <h2 className="text-lg font-bold text-[#002B5B]">All Stats & Charts</h2>
+                  <p className="text-[10px] text-gray-500 font-medium mt-0.5">Academic overview</p>
+                </div>
+                <button 
+                  onClick={() => setShowCharts(false)}
+                  className="p-1.5 bg-white border border-gray-100 rounded-full text-gray-600 shadow-sm"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className="space-y-3 pb-10">
+                {/* Subject Performance */}
+                <div className="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <h3 className="text-xs font-bold text-[#002B5B]">Subject Performance</h3>
+                      <p className="text-[9px] text-gray-500 font-medium">Your score vs class average</p>
+                    </div>
+                    <BarChart3 size={14} className="text-[#002B5B]" />
+                  </div>
+                  <div className="w-full h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={performanceData} margin={{ top: 5, right: 5, left: -35, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                        <XAxis dataKey="subject" stroke="#94A3B8" tick={{ fontSize: 8, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                        <YAxis stroke="#94A3B8" tick={{ fontSize: 8, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                        <Tooltip contentStyle={{ backgroundColor: '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '9px' }} />
+                        <Bar dataKey="score" fill="#002B5B" radius={[3, 3, 0, 0]} barSize={16} />
+                        <Bar dataKey="class_avg" fill="#2D54A8" radius={[3, 3, 0, 0]} barSize={16} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Attendance Trend */}
+                <div className="bg-white rounded-xl border border-gray-100 p-3 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <h3 className="text-xs font-bold text-[#002B5B]">Attendance Trend</h3>
+                      <p className="text-[9px] text-gray-500 font-medium">Monthly attendance percentage</p>
+                    </div>
+                    <TrendingUp size={14} className="text-[#2D54A8]" />
+                  </div>
+                  <div className="w-full h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={attendanceData} margin={{ top: 5, right: 5, left: -35, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="colorAttendanceOverlay" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#2D54A8" stopOpacity={0.15}/>
+                            <stop offset="95%" stopColor="#2D54A8" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                        <XAxis dataKey="month" stroke="#94A3B8" tick={{ fontSize: 8, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                        <YAxis stroke="#94A3B8" tick={{ fontSize: 8, fontWeight: 600 }} domain={[80, 100]} axisLine={false} tickLine={false} />
+                        <Tooltip contentStyle={{ backgroundColor: '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '9px' }} />
+                        <Area type="monotone" dataKey="percentage" stroke="#2D54A8" strokeWidth={2} fillOpacity={1} fill="url(#colorAttendanceOverlay)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Desktop Sections */}
+        <div className="hidden md:block">
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+            {/* ... charts code ... */}
+          </div>
+        </div>
+
+        {/* Existing logic for charts and lists - ensuring they are visible on desktop */}
+        <div className="hidden md:grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Performance Chart */}
           <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
             <div className="flex items-center justify-between mb-3">

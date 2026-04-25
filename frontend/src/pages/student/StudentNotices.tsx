@@ -3,6 +3,7 @@ import { noticeAPI, eventAPI } from '../../services/api';
 import Badge from '../../components/Badge';
 import { Skeleton, CardSkeleton } from '../../components/Skeleton';
 import { FaBell, FaCalendarAlt } from 'react-icons/fa';
+import PageHeader from '../../components/PageHeader';
 
 const StudentNotices: React.FC = () => {
   const [notices, setNotices] = useState<any[]>([]);
@@ -43,18 +44,47 @@ const StudentNotices: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F0F2F5' }}>
-      <div className="w-full px-2 py-3 md:px-4 md:py-4 lg:px-6">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <PageHeader 
+        title="Notices & Events" 
+        subtitle="Stay updated with latest school news"
+      />
+      <div className="w-full px-3 py-4 md:px-4 md:py-4 lg:px-6">
+        {/* Mobile Tabs */}
+        <div className="md:hidden mb-6">
+          <div className="inline-flex w-full p-1 bg-white rounded-xl shadow-sm border border-gray-100">
+            <button 
+              onClick={() => setTab('notices')} 
+              className={`flex-1 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                tab === 'notices' 
+                  ? 'bg-[#002B5B] text-white shadow-md' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Notices ({notices.length})
+            </button>
+            <button 
+              onClick={() => setTab('events')} 
+              className={`flex-1 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+                tab === 'events' 
+                  ? 'bg-[#002B5B] text-white shadow-md' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Events ({events.length})
+            </button>
+          </div>
+        </div>
+
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 md:gap-6">
             <div>
-              <h1 className="text-2xl font-bold text-[#1e293b] tracking-tight">Notices & Events</h1>
-              <p className="text-xs font-medium text-gray-500 mt-1">Stay updated with latest school news</p>
+              <h1 className="text-xl md:text-2xl font-bold text-[#1e293b] tracking-tight">Notices & Events</h1>
+              <p className="text-[10px] md:text-xs font-medium text-gray-500 mt-1">Stay updated with latest school news</p>
             </div>
-            
             <div className="inline-flex p-1 bg-gray-100 rounded-xl self-start sm:self-auto border border-gray-200/50">
               <button 
                 onClick={() => setTab('notices')} 
-                className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${
+                className={`px-3 md:px-4 py-1.5 rounded-lg text-[9px] md:text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${
                   tab === 'notices' 
                     ? 'bg-white shadow-sm text-[#002B5B]' 
                     : 'text-gray-500 hover:text-gray-700'
@@ -64,7 +94,7 @@ const StudentNotices: React.FC = () => {
               </button>
               <button 
                 onClick={() => setTab('events')} 
-                className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${
+                className={`px-3 md:px-4 py-1.5 rounded-lg text-[9px] md:text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${
                   tab === 'events' 
                     ? 'bg-white shadow-sm text-[#002B5B]' 
                     : 'text-gray-500 hover:text-gray-700'
@@ -87,21 +117,21 @@ const StudentNotices: React.FC = () => {
                   <p className="text-sm font-medium text-gray-400">No notices available</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {notices.map(n => (
                     <div key={n._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-all duration-300 flex flex-col">
                       <div className="h-1 bg-[#002B5B]"></div>
-                      <div className="p-5 flex-1 flex flex-col">
+                      <div className="p-4 md:p-5 flex-1 flex flex-col">
                         <div className="flex justify-between items-start gap-4 mb-3">
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-[#002B5B] uppercase tracking-widest">
+                            <span className="text-[9px] md:text-[10px] font-bold text-[#002B5B] uppercase tracking-widest">
                               {new Date(n.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                             </span>
-                            <h3 className="font-bold text-gray-900 text-sm mt-1 uppercase tracking-tight line-clamp-1 group-hover:text-[#002B5B] transition-colors">{n.title}</h3>
+                            <h3 className="font-bold text-gray-900 text-[13px] md:text-sm mt-1 uppercase tracking-tight line-clamp-1 group-hover:text-[#002B5B] transition-colors">{n.title}</h3>
                           </div>
                           <Badge status={n.priority} />
                         </div>
-                        <p className="text-[12px] text-gray-600 font-medium leading-relaxed line-clamp-4 flex-1 mb-4">{n.content}</p>
+                        <p className="text-[11px] md:text-[12px] text-gray-600 font-medium leading-relaxed line-clamp-4 flex-1 mb-4">{n.content}</p>
                         <div className="pt-3 border-t border-gray-50">
                          
                         </div>
@@ -121,26 +151,26 @@ const StudentNotices: React.FC = () => {
                   <p className="text-sm font-medium text-gray-400">No events scheduled</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {events.map(ev => (
                     <div key={ev._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-all duration-300 flex flex-col">
                       <div className="h-1 bg-[#002B5B]"></div>
-                      <div className="p-5 flex-1 flex flex-col">
+                      <div className="p-4 md:p-5 flex-1 flex flex-col">
                         <div className="flex justify-between items-start gap-4 mb-3">
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-[#002B5B] uppercase tracking-widest">{new Date(ev.event_date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}</span>
-                            <h3 className="font-bold text-gray-900 text-sm mt-1 leading-tight group-hover:text-[#002B5B] transition-colors">{ev.title}</h3>
+                            <span className="text-[9px] md:text-[10px] font-bold text-[#002B5B] uppercase tracking-widest">{new Date(ev.event_date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}</span>
+                            <h3 className="font-bold text-gray-900 text-[13px] md:text-sm mt-1 leading-tight group-hover:text-[#002B5B] transition-colors">{ev.title}</h3>
                           </div>
-                          <span className="bg-blue-50 text-[#002B5B] px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase tracking-widest border border-blue-100 shrink-0">{ev.event_type}</span>
+                          <span className="bg-blue-50 text-[#002B5B] px-2 py-0.5 rounded-lg text-[8px] md:text-[9px] font-bold uppercase tracking-widest border border-blue-100 shrink-0">{ev.event_type}</span>
                         </div>
-                        {ev.description && <p className="text-[12px] text-gray-500 font-medium leading-relaxed line-clamp-2 mb-4">{ev.description}</p>}
+                        {ev.description && <p className="text-[11px] md:text-[12px] text-gray-500 font-medium leading-relaxed line-clamp-2 mb-4">{ev.description}</p>}
                         <div className="flex flex-wrap items-center gap-4 mt-auto pt-3 border-t border-gray-50">
                           {ev.location && (
-                            <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                            <div className="flex items-center gap-1.5 text-[8px] md:text-[9px] font-bold text-gray-400 uppercase tracking-widest">
                               <span className="text-blue-500">📍</span> {ev.location}
                             </div>
                           )}
-                          <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                          <div className="flex items-center gap-1.5 text-[8px] md:text-[9px] font-bold text-gray-400 uppercase tracking-widest">
                             <span className="text-blue-500">⏰</span> {new Date(ev.event_date).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </div>
