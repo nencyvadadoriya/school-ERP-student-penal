@@ -193,7 +193,7 @@ const StudentLeave: React.FC = () => {
             onClick={() => setModal(true)}
             className="flex items-center justify-center gap-2 px-4 py-2 md:px-6 md:py-2.5 rounded-xl font-bold text-white transition-all duration-200 bg-[#002B5B] hover:bg-[#002B5B]/90 shadow-md active:scale-95 text-[10px] md:text-[11px] uppercase tracking-widest w-full sm:w-auto"
           >
-            <Plus size={14} md:size={16} strokeWidth={3} />
+            <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" strokeWidth={3} />
             <span>Apply Leave</span>
           </button>
         </div>
